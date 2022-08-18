@@ -1,0 +1,14 @@
+// Invoke a lambda on cloud
+serverless invoke -f <function name>
+
+// Invoke a lambda locally
+serverless invoke local -f <function name>
+
+// Invoke a lambda locally with event
+serverless invoke local -f <function name> -p <event json path>
+
+// Deploy a lambda function
+serverless deploy function -f <function-name>
+
+// Create a new lambda
+serverless create --template aws-nodejs --path <path of lambda>
