@@ -1,27 +1,33 @@
 import {
-  Box,
-  TextField,
-  Typography,
-  useTheme,
-  Stack,
-  Button,
   Alert,
   AlertTitle,
+  Box,
+  Button,
   Collapse,
   LinearProgress,
   Link,
+  Stack,
+  TextField,
+  Typography,
+  useTheme,
 } from "@mui/material";
-import { useState } from "react";
-import axios from "axios";
+import {
+  useAuthentication,
+  useAuthenticationUpdate,
+} from "../../context/AuthenticationContext";
 import Logo from "../../components/Logo/index";
+import _ from "lodash";
+import axios from "axios";
+import { Link as RouterLink, Navigate } from "react-router-dom";
 import { loginValidation } from "../../utils/validation";
-import * as _ from "lodash";
-import { Link as RouterLink } from "react-router-dom";
+import { useState } from "react";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT_URL;
 
 function Login() {
   const theme = useTheme();
+  let authentication = useAuthentication();
+  let updateAuthentication = useAuthenticationUpdate();
   const logoStyle = {
     fill: theme.palette.text.primary,
     height: parseInt(theme.spacing()) * 13,
@@ -50,21 +56,20 @@ function Login() {
       password: "",
     });
     setSubmitted(true);
+    let response = null;
     try {
-      const response = await axios.post("/users/login", {
+      response = await axios.post("/users/login", {
         email: formValues.email,
         password: formValues.password,
       });
-      console.log(response.data);
       setError(null);
       setErrorAlertOpen(false);
-      setSuccessAlertOpen(true);
     } catch (error) {
       setError(error.response.data);
       setErrorAlertOpen(true);
-      setSuccessAlertOpen(false);
     } finally {
       setSubmitted(false);
+      updateAuthentication(_.isEmpty(response) ? null : response.data);
     }
   }
 
@@ -74,9 +79,12 @@ function Login() {
     password: "",
   });
   let [errorAlertOpen, setErrorAlertOpen] = useState(false);
-  let [successAlertOpen, setSuccessAlertOpen] = useState(false);
   let [error, setError] = useState(null);
   let [submitted, setSubmitted] = useState(false);
+
+  if (authentication.isAuthenticated) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <>
@@ -119,20 +127,6 @@ function Login() {
           >
             <AlertTitle>Login Error</AlertTitle>
             {error}
-          </Alert>
-        </Collapse>
-      )}
-      {!error && (
-        <Collapse in={successAlertOpen} sx={{ mt: 3, mx: [2, 15, 30, 45, 60] }}>
-          <Alert
-            severity="success"
-            variant="filled"
-            onClose={() => {
-              setSuccessAlertOpen(false);
-            }}
-          >
-            <AlertTitle>Login Error</AlertTitle>
-            Login successful. Redirect function not yet implemented !! :(
           </Alert>
         </Collapse>
       )}

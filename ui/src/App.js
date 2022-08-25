@@ -1,5 +1,8 @@
+import Home from "./pages/Home/index";
 import Login from "./pages/Login/index";
+import PrivateRoutes from "./utils/PrivateRoutes";
 import Register from "./pages/Register/index";
+import { AuthenticationProvider } from "./context/AuthenticationContext";
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 
@@ -20,10 +23,15 @@ export default function App() {
         }}
       >
         <CssBaseline />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
+        <AuthenticationProvider>
+          <Routes>
+            <Route element={<PrivateRoutes />}>
+              <Route path="/" element={<Home />} />
+            </Route>
+            <Route path="/login" element={<Login />} exact />
+            <Route path="/register" element={<Register />} exact />
+          </Routes>
+        </AuthenticationProvider>
       </Box>
     </ThemeProvider>
   );
