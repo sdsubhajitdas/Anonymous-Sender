@@ -14,13 +14,13 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import Logo from "../../components/Logo/index";
-import { loginValidation } from "../../utils/validation";
-import * as _ from "lodash";
+import { registerValidation } from "../../utils/validation";
 import { Link as RouterLink } from "react-router-dom";
+import * as _ from "lodash";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT_URL;
 
-function Login() {
+function Register() {
   const theme = useTheme();
   const logoStyle = {
     fill: theme.palette.text.primary,
@@ -28,7 +28,7 @@ function Login() {
     padding: parseInt(theme.spacing()),
     width: parseInt(theme.spacing()) * 13,
   };
-  const loginStyle = {
+  const registerStyle = {
     backgroundColor: theme.palette.background.paper,
     borderRadius: 3,
     boxShadow: theme.shadows[15],
@@ -38,20 +38,29 @@ function Login() {
     p: 3,
   };
 
-  async function login(event) {
+  async function register(event) {
     event.preventDefault();
-    let validationError = loginValidation(formValues);
+
+    let validationError = registerValidation(formValues);
     if (!_.isEmpty(validationError)) {
       setFormValidationError(validationError);
       return;
     }
     setFormValidationError({
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     });
     setSubmitted(true);
     try {
-      const response = await axios.post("/users/login", {
+      let response = await axios.post("/users/register", {
+        name: formValues.name,
+        email: formValues.email,
+        password: formValues.password,
+      });
+      console.log(response.data);
+      response = await axios.post("/users/login", {
         email: formValues.email,
         password: formValues.password,
       });
@@ -68,10 +77,17 @@ function Login() {
     }
   }
 
-  let [formValues, setFormValues] = useState({ email: "", password: "" });
-  let [formValidationError, setFormValidationError] = useState({
+  let [formValues, setFormValues] = useState({
+    name: "",
     email: "",
     password: "",
+    confirmPassword: "",
+  });
+  let [formValidationError, setFormValidationError] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   let [errorAlertOpen, setErrorAlertOpen] = useState(false);
   let [successAlertOpen, setSuccessAlertOpen] = useState(false);
@@ -117,7 +133,7 @@ function Login() {
               setErrorAlertOpen(false);
             }}
           >
-            <AlertTitle>Login Error</AlertTitle>
+            <AlertTitle>Registration Error</AlertTitle>
             {error}
           </Alert>
         </Collapse>
@@ -131,17 +147,29 @@ function Login() {
               setSuccessAlertOpen(false);
             }}
           >
-            <AlertTitle>Login Error</AlertTitle>
-            Login successful. Redirect function not yet implemented !! :(
+            <AlertTitle>Registration Successful</AlertTitle>
+            Registration successful. Redirect function not yet implemented !! :(
           </Alert>
         </Collapse>
       )}
 
       <form>
-        <Stack spacing={2} sx={loginStyle}>
+        <Stack spacing={2} sx={registerStyle}>
           <Typography variant="h3" align="center">
-            Login
+            Register
           </Typography>
+          <TextField
+            label="Name"
+            color="secondary"
+            type={"text"}
+            value={formValues.name}
+            onChange={(e) =>
+              setFormValues({ ...formValues, name: e.target.value })
+            }
+            disabled={submitted}
+            error={formValidationError.name ? true : false}
+            helperText={formValidationError.name}
+          />
           <TextField
             label="Email"
             color="secondary"
@@ -166,22 +194,34 @@ function Login() {
             error={formValidationError.password ? true : false}
             helperText={formValidationError.password}
           />
+          <TextField
+            label="Confirm Password"
+            color="secondary"
+            type={"password"}
+            value={formValues.confirmPassword}
+            onChange={(e) =>
+              setFormValues({ ...formValues, confirmPassword: e.target.value })
+            }
+            disabled={submitted}
+            error={formValidationError.confirmPassword ? true : false}
+            helperText={formValidationError.confirmPassword}
+          />
           <Button
             variant="contained"
             color="secondary"
-            onClick={login}
+            onClick={register}
             type="submit"
             disabled={submitted}
           >
-            Login
+            Register
           </Button>
           <Link
-            to="/register"
+            to="/login"
             component={RouterLink}
             align="center"
             color={"secondary"}
           >
-            Register as a new user ?
+            Already have an account ?
           </Link>
           {submitted && <LinearProgress color="warning" />}
         </Stack>
@@ -190,4 +230,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
