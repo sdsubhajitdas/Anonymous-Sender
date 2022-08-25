@@ -9,10 +9,14 @@ import {
   AlertTitle,
   Collapse,
   LinearProgress,
+  Link,
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import Logo from "../../components/Logo/index";
+import { loginValidation } from "../../utils/validation";
+import * as _ from "lodash";
+import { Link as RouterLink } from "react-router-dom";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT_URL;
 
@@ -36,7 +40,16 @@ function Login() {
 
   async function login(event) {
     event.preventDefault();
-    setLoading(true);
+    let validationError = loginValidation(formValues);
+    if (!_.isEmpty(validationError)) {
+      setFormValidationError(validationError);
+      return;
+    }
+    setFormValidationError({
+      email: "",
+      password: "",
+    });
+    setSubmitted(true);
     try {
       const response = await axios.post("/users/login", {
         email: formValues.email,
@@ -51,15 +64,19 @@ function Login() {
       setErrorAlertOpen(true);
       setSuccessAlertOpen(false);
     } finally {
-      setLoading(false);
+      setSubmitted(false);
     }
   }
 
   let [formValues, setFormValues] = useState({ email: "", password: "" });
+  let [formValidationError, setFormValidationError] = useState({
+    email: "",
+    password: "",
+  });
   let [errorAlertOpen, setErrorAlertOpen] = useState(false);
   let [successAlertOpen, setSuccessAlertOpen] = useState(false);
   let [error, setError] = useState(null);
-  let [loading, setLoading] = useState(false);
+  let [submitted, setSubmitted] = useState(false);
 
   return (
     <>
@@ -90,6 +107,7 @@ function Login() {
           Anonymous Sender
         </Typography>
       </Box>
+
       {error && (
         <Collapse in={errorAlertOpen} sx={{ mt: 3, mx: [2, 15, 30, 45, 60] }}>
           <Alert
@@ -118,6 +136,7 @@ function Login() {
           </Alert>
         </Collapse>
       )}
+
       <form>
         <Stack spacing={2} sx={loginStyle}>
           <Typography variant="h3" align="center">
@@ -131,7 +150,9 @@ function Login() {
             onChange={(e) =>
               setFormValues({ ...formValues, email: e.target.value })
             }
-            disabled={loading}
+            disabled={submitted}
+            error={formValidationError.email ? true : false}
+            helperText={formValidationError.email}
           />
           <TextField
             label="Password"
@@ -141,18 +162,23 @@ function Login() {
             onChange={(e) =>
               setFormValues({ ...formValues, password: e.target.value })
             }
-            disabled={loading}
+            disabled={submitted}
+            error={formValidationError.password ? true : false}
+            helperText={formValidationError.password}
           />
           <Button
             variant="contained"
             color="secondary"
             onClick={login}
             type="submit"
-            disabled={loading}
+            disabled={submitted}
           >
             Login
           </Button>
-          {loading && <LinearProgress color="warning" />}
+          <Link to="/register" component={RouterLink} align="center">
+            Register as a new user ?
+          </Link>
+          {submitted && <LinearProgress color="warning" />}
         </Stack>
       </form>
     </>

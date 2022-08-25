@@ -1,5 +1,7 @@
 import Login from "./pages/Login/index";
+import Register from "./pages/Register/index";
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { Routes, Route } from "react-router-dom";
 
 export default function App() {
   const theme = createTheme(getDesignTokens("dark"));
@@ -18,7 +20,10 @@ export default function App() {
         }}
       >
         <CssBaseline />
-        <Login />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
       </Box>
     </ThemeProvider>
   );
