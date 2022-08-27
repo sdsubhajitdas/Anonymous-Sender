@@ -71,17 +71,13 @@ export default function App() {
 
   async function copyToClipBoard(text) {
     try {
-      // let perms = await navigator.permissions.query({ name: "clipboard-read" });
       await navigator.clipboard.writeText(text);
       setCopyState({
         show: true,
-        message: "Link copied",
+        message: "Link copied! 😋",
       });
-      // console.log(perms);
-      // alert(Object.keys(perms).join(","))?
-      // console.log(`Text: \"${text}\" copied to clipboard`);
     } catch (error) {
-      setCopyState({ show: true, message: "Some error occurred" });
+      setCopyState({ show: true, message: "Some error occurred! 😭" });
       console.error(error);
     }
   }
@@ -121,7 +117,7 @@ export default function App() {
         Hello {authentication.user.name}
       </Typography>
 
-      <Box sx={{ marginX: [1, 8, 12, 18, 30], marginTop: 3, paddingX: 5 }}>
+      <Box sx={{ marginX: [1, 8, 12, 18, 30], marginTop: 3 }}>
         <TextField
           color="secondary"
           label="SHARE WITH OTHERS TO RECEIVE MESSAGES"
@@ -195,10 +191,8 @@ export default function App() {
 
       <Snackbar
         open={copyState.show}
-        autoHideDuration={500}
-        onClose={() =>
-          setCopyState({ show: false, message: copyState.message })
-        }
+        autoHideDuration={2500}
+        onClose={() => setCopyState({ show: false, message: "" })}
         message={copyState.message}
       />
       <Typography>{}</Typography>
