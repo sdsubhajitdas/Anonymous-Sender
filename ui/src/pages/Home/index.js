@@ -3,9 +3,11 @@ import axios from "axios";
 import moment from "moment";
 import {
   Box,
+  CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
+  Snackbar,
   TextField,
   Typography,
   useTheme,
@@ -61,6 +63,7 @@ export default function App() {
 
       setMessageItemsForSingleColumn(updatedMessageItemsForSingleColumn);
       setMessageItemsForTwoColumns(updatedMessageItemsForTwoColumns);
+      setMessagesLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -68,9 +71,18 @@ export default function App() {
 
   async function copyToClipBoard(text) {
     try {
-      await navigator.clipboard.writeText(text);
-      console.log(`Text: \"${text}\" copied to clipboard`);
+      let perms = await navigator.permissions.query({ name: "clipboard-read" });
+      // console.log(perms);
+      await navigator.clipboard.writeText();
+      setCopyState({
+        show: true,
+        message: "Link copied",
+      });
+      // console.log(perms);
+      // alert(Object.keys(perms).join(","))?
+      // console.log(`Text: \"${text}\" copied to clipboard`);
     } catch (error) {
+      setCopyState({ show: true, message: "ERROR:" + JSON.stringify(error) });
       console.error(error);
     }
   }
@@ -83,6 +95,8 @@ export default function App() {
     right: [],
   });
   let [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  let [copyState, setCopyState] = useState({ show: false, message: "" });
+  let [messagesLoading, setMessagesLoading] = useState(true);
 
   useEffect(() => {
     retrieveMessages();
@@ -137,7 +151,27 @@ export default function App() {
         />
       </Box>
 
-      <Box sx={{ marginX: [1, 8, 12, 18, 30], marginY: 5 }}>
+      {messagesLoading && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 10,
+            marginTop: 10,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+
+      <Box
+        sx={{
+          marginX: [1, 8, 12, 18, 30],
+          marginY: 5,
+          display: messagesLoading ? "none" : "",
+        }}
+      >
         {screenWidth < theme.breakpoints.values["md"] ? (
           <Grid container spacing={2.5}>
             {messageItemsForSingleColumn}
@@ -159,6 +193,16 @@ export default function App() {
           </Grid>
         )}
       </Box>
+
+      <Snackbar
+        open={copyState.show}
+        autoHideDuration={500}
+        onClose={() =>
+          setCopyState({ show: false, message: copyState.message })
+        }
+        message={copyState.message}
+      />
+      <Typography>{}</Typography>
     </>
   );
 }
