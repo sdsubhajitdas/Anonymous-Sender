@@ -71,9 +71,8 @@ export default function App() {
 
   async function copyToClipBoard(text) {
     try {
-      let perms = await navigator.permissions.query({ name: "clipboard-read" });
-      // console.log(perms);
-      await navigator.clipboard.writeText();
+      // let perms = await navigator.permissions.query({ name: "clipboard-read" });
+      await navigator.clipboard.writeText(text);
       setCopyState({
         show: true,
         message: "Link copied",
@@ -82,7 +81,7 @@ export default function App() {
       // alert(Object.keys(perms).join(","))?
       // console.log(`Text: \"${text}\" copied to clipboard`);
     } catch (error) {
-      setCopyState({ show: true, message: "ERROR:" + JSON.stringify(error) });
+      setCopyState({ show: true, message: "Some error occurred" });
       console.error(error);
     }
   }
