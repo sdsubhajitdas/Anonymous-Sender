@@ -22,7 +22,7 @@ const loginValidation = (data) => {
 const messageValidation = (data) => {
   const schema = Joi.object({
     userId: Joi.string().required(),
-    sender: Joi.string(),
+    sender: Joi.string().allow(null, ""),
     message: Joi.string().min(1).required(),
   });
 

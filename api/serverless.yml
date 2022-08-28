@@ -12,7 +12,7 @@ provider:
 functions:
   getMessages:
     description: "Returns all messages received for a particular user"
-    handler: ./api/routes/messages/GET/index.handler
+    handler: ./routes/messages/GET/index.handler
     tags:
       API PATH: GET /messages
     events:
@@ -21,7 +21,7 @@ functions:
           method: get
   postMessages:
     description: "Add a message for a particular user"
-    handler: ./api/routes/messages/POST/index.handler
+    handler: ./routes/messages/POST/index.handler
     tags:
       API PATH: POST /messages
     events:
@@ -30,7 +30,7 @@ functions:
           method: post
   postUsersRegister:
     description: "Handles registration of new users"
-    handler: ./api/routes/users/register/POST/index.handler
+    handler: ./routes/users/register/POST/index.handler
     tags:
       API PATH: POST /users/register
     events:
@@ -39,7 +39,7 @@ functions:
           method: post
   postUsersLogin:
     description: "Handles user login"
-    handler: ./api/routes/users/login/POST/index.handler
+    handler: ./routes/users/login/POST/index.handler
     tags:
       API PATH: POST /users/login
     events:
