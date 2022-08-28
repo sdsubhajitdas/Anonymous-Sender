@@ -1,7 +1,9 @@
 import Home from "./pages/Home/index";
 import Login from "./pages/Login/index";
+import NotFound from "./pages/NotFound";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import Register from "./pages/Register/index";
+import Send from "./pages/Send";
 import { AuthenticationProvider } from "./context/AuthenticationContext";
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
@@ -30,6 +32,9 @@ export default function App() {
             </Route>
             <Route path="/login" element={<Login />} exact />
             <Route path="/register" element={<Register />} exact />
+            <Route path="/send/:userId" element={<Send />} exact />
+            <Route path="not-found" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthenticationProvider>
       </Box>

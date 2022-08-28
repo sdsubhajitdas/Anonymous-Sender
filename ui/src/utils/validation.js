@@ -64,3 +64,18 @@ export function registerValidation({ name, email, password, confirmPassword }) {
 
   return error;
 }
+
+export function messageValidation({ message }) {
+  let error = {};
+
+  // Message Validation
+  // 1. Required
+  // 2. Max length 1000 characters
+  if (_.isEmpty(message)) {
+    _.set(error, "message", "Message is required");
+  } else if (message.length > 1000) {
+    _.set(error, "message", "Message must be less than 1000 characters");
+  }
+
+  return error;
+}
