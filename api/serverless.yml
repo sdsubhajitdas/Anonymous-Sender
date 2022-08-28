@@ -28,6 +28,15 @@ functions:
       - httpApi:
           path: /messages
           method: post
+  getUsers:
+    description: "Returns data for a particular user also"
+    handler: ./routes/users/GET/index.handler
+    tags:
+      API PATH: GET /users/:userId
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: get
   postUsersRegister:
     description: "Handles registration of new users"
     handler: ./routes/users/register/POST/index.handler
