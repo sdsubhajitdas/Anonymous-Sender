@@ -24,7 +24,9 @@ module.exports.handler = async (event, context) => {
       throw error.errorCode + ": " + error.body;
     }
 
-    let messages = await Message.find({ userId: user._id });
+    let messages = await Message.find({ userId: user._id }).sort({
+      createdAt: -1,
+    });
 
     response = {
       statusCode: 200,
