@@ -24,7 +24,7 @@ function isAuthenticated(headers) {
   } catch (error) {
     if (_.get(error, "name", "") === "JsonWebTokenError") {
       error = {
-        statusCode: 401,
+        statusCode: 403,
         errorCode: "AuthenticationError",
         body: JSON.stringify("Invalid authentication token"),
       };
