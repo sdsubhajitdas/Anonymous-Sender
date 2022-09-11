@@ -10,6 +10,7 @@ const User = require("../../../../models/User");
 const logger = require("../../../../utils/logger");
 const { loginValidation } = require("../../../../utils/validation");
 const { startDatabaseConnection } = require("../../../../utils/database");
+const { getAccessToken, getRefreshToken } = require("../../../../utils/jwt");
 
 module.exports.handler = async (event, context) => {
   let response;
@@ -62,15 +63,15 @@ module.exports.handler = async (event, context) => {
       throw "AuthenticationError: " + response.body;
     }
 
-    user = {
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-    };
+    const accessToken = getAccessToken(user);
+    const refreshToken = getRefreshToken(user);
 
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-
+    let expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 1);
     response = {
+      headers: {
+        "Set-Cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Expires=${expiryDate.toUTCString()}`,
+      },
       statusCode: 200,
       body: JSON.stringify({ ...user, accessToken }),
     };

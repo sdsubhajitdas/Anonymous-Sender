@@ -29,7 +29,7 @@ functions:
           path: /messages
           method: post
   getUsers:
-    description: "Returns data for a particular user also"
+    description: "Returns data for a particular user"
     handler: ./routes/users/GET/index.handler
     tags:
       API PATH: GET /users/:userId
@@ -55,6 +55,15 @@ functions:
       - httpApi:
           path: /users/login
           method: post
+  getUsersRefresh:
+    description: "Refreshes user authentication token"
+    handler: ./routes/users/refresh/GET/index.handler
+    tags:
+      API PATH: GET /users/refresh
+    events:
+      - httpApi:
+          path: /users/refresh
+          method: get
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
