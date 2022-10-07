@@ -20,7 +20,7 @@ function isAuthenticated(headers) {
   }
 
   try {
-    user = verifyAccessToken(accessToken); //jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+    user = verifyAccessToken(accessToken);
     return { error, user };
   } catch (error) {
     if (_.get(error, "name", "") === "JsonWebTokenError") {
