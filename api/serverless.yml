@@ -2,7 +2,7 @@ service: anonymous-sender
 frameworkVersion: "3"
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs16.x
   stage: sd-dev
   region: ap-south-1
   architecture: x86_64
@@ -63,6 +63,15 @@ functions:
     events:
       - httpApi:
           path: /users/refresh
+          method: get
+  getUsersLogout:
+    description: "Handles user logout"
+    handler: ./routes/users/logout/GET/index.handler
+    tags:
+      API PATH: GET /users/logout
+    events:
+      - httpApi:
+          path: /users/logout
           method: get
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
