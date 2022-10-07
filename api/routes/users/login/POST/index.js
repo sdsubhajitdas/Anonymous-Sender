@@ -2,7 +2,6 @@
 
 const _ = require("lodash");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
@@ -65,6 +64,12 @@ module.exports.handler = async (event, context) => {
 
     const accessToken = getAccessToken(user);
     const refreshToken = getRefreshToken(user);
+
+    user = {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+    };
 
     let expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 1);

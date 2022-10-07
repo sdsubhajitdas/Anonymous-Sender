@@ -9,7 +9,7 @@ function filterUserData(user) {
   };
 }
 
-export function getAccessToken(user) {
+function getAccessToken(user) {
   user = filterUserData(user);
 
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
@@ -17,7 +17,7 @@ export function getAccessToken(user) {
   });
 }
 
-export function getRefreshToken(user) {
+function getRefreshToken(user) {
   user = filterUserData(user);
 
   return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
@@ -25,10 +25,17 @@ export function getRefreshToken(user) {
   });
 }
 
-export function verifyAccessToken(accessToken) {
+function verifyAccessToken(accessToken) {
   return jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 }
 
-export function verifyRefreshToken(refreshToken) {
+function verifyRefreshToken(refreshToken) {
   return jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 }
+
+module.exports = {
+  getAccessToken,
+  getRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+};
