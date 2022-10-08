@@ -1,7 +1,6 @@
 import {
   Alert,
   AlertTitle,
-  Box,
   Button,
   Collapse,
   LinearProgress,
@@ -15,7 +14,7 @@ import {
   useAuthentication,
   useAuthenticationUpdate,
 } from "../../context/AuthenticationContext";
-import Logo from "../../components/Logo/index";
+import Logo from "../../components/Logo";
 import _ from "lodash";
 import axios from "axios";
 import { Link as RouterLink, Navigate } from "react-router-dom";
@@ -28,12 +27,6 @@ function Login() {
   const theme = useTheme();
   let authentication = useAuthentication();
   let updateAuthentication = useAuthenticationUpdate();
-  const logoStyle = {
-    fill: theme.palette.text.primary,
-    height: parseInt(theme.spacing()) * 13,
-    padding: parseInt(theme.spacing()),
-    width: parseInt(theme.spacing()) * 13,
-  };
   const loginStyle = {
     backgroundColor: theme.palette.background.paper,
     borderRadius: 3,
@@ -88,33 +81,7 @@ function Login() {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: {
-            xs: "column",
-            sm: "row",
-          },
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Logo style={logoStyle} />
-        <Typography
-          variant="logoLarge"
-          align="center"
-          component={"h2"}
-          sx={{
-            ml: {
-              xs: 0,
-              sm: 2.5,
-              md: 5,
-            },
-          }}
-        >
-          Anonymous Sender
-        </Typography>
-      </Box>
+      <Logo />
 
       {error && (
         <Collapse in={errorAlertOpen} sx={{ mt: 3, mx: [2, 15, 30, 45, 60] }}>
