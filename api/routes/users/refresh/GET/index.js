@@ -31,7 +31,12 @@ module.exports.handler = async (event, context) => {
 
     response = {
       statusCode: 200,
-      body: JSON.stringify({ accessToken }),
+      body: JSON.stringify({
+        _id: decodedUser._id,
+        email: decodedUser.email,
+        name: decodedUser.name,
+        accessToken,
+      }),
     };
   } catch (error) {
     logger.error(error);

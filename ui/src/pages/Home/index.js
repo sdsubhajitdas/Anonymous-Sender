@@ -1,5 +1,5 @@
 import MessageItem from "../../components/MessageItem/index";
-import axios from "axios";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import moment from "moment";
 import {
   Box,
@@ -13,21 +13,17 @@ import {
   useTheme,
 } from "@mui/material";
 import { ContentCopy } from "@mui/icons-material";
-import { useAuthentication } from "../../context/AuthenticationContext";
+import useAuthentication from "../../hooks/useAuthentication";
 import { useEffect, useState } from "react";
-
-axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT_URL;
 
 export default function App() {
   let theme = useTheme();
-  let authentication = useAuthentication();
-  axios.defaults.headers.common[
-    "Authorization"
-  ] = `Bearer ${authentication.user.accessToken}`;
+  let { authentication } = useAuthentication();
+  const axiosPrivate = useAxiosPrivate();
 
   async function retrieveMessages() {
     try {
-      const response = await axios.get("/messages");
+      const response = await axiosPrivate.get("/messages");
 
       const generateSingleMessageItem = (itemData) => {
         return (
@@ -95,7 +91,6 @@ export default function App() {
 
   useEffect(() => {
     retrieveMessages();
-
     window.addEventListener("resize", () => {
       setScreenWidth(window.innerWidth);
     });
