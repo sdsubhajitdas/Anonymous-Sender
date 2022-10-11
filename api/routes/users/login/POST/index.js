@@ -75,7 +75,7 @@ module.exports.handler = async (event, context) => {
     expiryDate.setDate(expiryDate.getDate() + 1);
     response = {
       headers: {
-        "Set-Cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Expires=${expiryDate.toUTCString()}`,
+        "Set-Cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Expires=${expiryDate.toUTCString()}; SameSite=None`,
       },
       statusCode: 200,
       body: JSON.stringify({ ...user, accessToken }),
