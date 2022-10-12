@@ -1,8 +1,9 @@
 import MessageItem from "../../components/MessageItem/index";
-import axios from "axios";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import moment from "moment";
 import {
   Box,
+  Button,
   CircularProgress,
   Grid,
   IconButton,
@@ -12,22 +13,19 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import LogoutRoundedIcon from "@mui/icons-material/Logout";
 import { ContentCopy } from "@mui/icons-material";
-import { useAuthentication } from "../../context/AuthenticationContext";
+import useAuthentication from "../../hooks/useAuthentication";
 import { useEffect, useState } from "react";
-
-axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT_URL;
 
 export default function App() {
   let theme = useTheme();
-  let authentication = useAuthentication();
-  axios.defaults.headers.common[
-    "Authorization"
-  ] = `Bearer ${authentication.user.accessToken}`;
+  let { authentication, setAuthentication } = useAuthentication();
+  const axiosPrivate = useAxiosPrivate();
 
   async function retrieveMessages() {
     try {
-      const response = await axios.get("/messages");
+      const response = await axiosPrivate.get("/messages");
 
       const generateSingleMessageItem = (itemData) => {
         return (
@@ -82,6 +80,19 @@ export default function App() {
     }
   }
 
+  async function logout() {
+    try {
+      axiosPrivate.get("/users/logout");
+      setAuthentication((previous) => ({
+        ...previous,
+        isAuthenticated: false,
+        user: null,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   let [messageItemsForSingleColumn, setMessageItemsForSingleColumn] = useState(
     []
   );
@@ -95,7 +106,6 @@ export default function App() {
 
   useEffect(() => {
     retrieveMessages();
-
     window.addEventListener("resize", () => {
       setScreenWidth(window.innerWidth);
     });
@@ -107,15 +117,37 @@ export default function App() {
 
   return (
     <>
-      <Typography
-        sx={{
-          paddingX: 3,
-          marginTop: 3,
-          typography: ["h2", "h2", "h1", "h1", "h1"],
-        }}
-      >
-        Hello {authentication.user.name}
-      </Typography>
+      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+        <Typography
+          sx={{
+            paddingX: 3,
+            marginTop: 3,
+            typography: ["h2", "h2", "h1", "h1", "h1"],
+          }}
+        >
+          Hello {authentication.user.name}
+        </Typography>
+        {screenWidth < theme.breakpoints.values["md"] ? (
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ marginLeft: "auto", marginRight: 1 }}
+            onClick={logout}
+          >
+            Logout
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<LogoutRoundedIcon />}
+            sx={{ marginLeft: "auto", marginRight: 3 }}
+            onClick={logout}
+          >
+            Logout
+          </Button>
+        )}
+      </Box>
 
       <Box sx={{ marginX: [1, 8, 12, 18, 30], marginTop: 3 }}>
         <TextField

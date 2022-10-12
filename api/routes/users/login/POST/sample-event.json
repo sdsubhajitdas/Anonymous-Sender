@@ -40,6 +40,6 @@
     "domainName": "testPrefix.testDomainName",
     "apiId": "twi2y9rrpd"
   },
-  "body": "{\n    \"name\": \"\",\n    \"email\": \"jeetudas95@gmail.com\",\n    \"password\": \"12345678\"\n}",
+  "body": "{\n\"email\": \"jeetudas95@gmail.com\",\n    \"password\": \"12345678\"\n}",
   "isBase64Encoded": false
 }

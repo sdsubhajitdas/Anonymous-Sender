@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
+const { verifyAccessToken } = require("./jwt");
 require("dotenv").config();
 
 function isAuthenticated(headers) {
@@ -19,12 +20,12 @@ function isAuthenticated(headers) {
   }
 
   try {
-    user = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+    user = verifyAccessToken(accessToken);
     return { error, user };
   } catch (error) {
     if (_.get(error, "name", "") === "JsonWebTokenError") {
       error = {
-        statusCode: 401,
+        statusCode: 403,
         errorCode: "AuthenticationError",
         body: JSON.stringify("Invalid authentication token"),
       };

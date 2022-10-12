@@ -9,7 +9,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import Logo from "../../components/Logo/index";
+import Logo from "../../components/Logo";
 import _ from "lodash";
 import axios from "axios";
 import { Send as SendIcon } from "@mui/icons-material";
@@ -22,12 +22,6 @@ axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT_URL;
 export default function Send() {
   const theme = useTheme();
   const { userId } = useParams();
-  const logoStyle = {
-    fill: theme.palette.text.primary,
-    height: parseInt(theme.spacing()) * 13,
-    padding: parseInt(theme.spacing()),
-    width: parseInt(theme.spacing()) * 13,
-  };
 
   async function sendMessage(event) {
     event.preventDefault();
@@ -106,33 +100,7 @@ export default function Send() {
   return (
     <>
       <Link href="/" underline="none" color={theme.palette.text.primary}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: {
-              xs: "column",
-              sm: "row",
-            },
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Logo style={logoStyle} />
-          <Typography
-            variant="logoLarge"
-            align="center"
-            component={"h2"}
-            sx={{
-              ml: {
-                xs: 0,
-                sm: 2.5,
-                md: 5,
-              },
-            }}
-          >
-            Anonymous Sender
-          </Typography>
-        </Box>
+        <Logo />
       </Link>
 
       {messageSent && (

@@ -1,5 +1,4 @@
 import {
-  Box,
   TextField,
   Typography,
   useTheme,
@@ -11,13 +10,10 @@ import {
   LinearProgress,
   Link,
 } from "@mui/material";
-import {
-  useAuthentication,
-  useAuthenticationUpdate,
-} from "../../context/AuthenticationContext";
+import useAuthentication from "../../hooks/useAuthentication";
 import Logo from "../../components/Logo/index";
 import _ from "lodash";
-import axios from "axios";
+import axios from "../../api/axios";
 import { Link as RouterLink, Navigate } from "react-router-dom";
 import { registerValidation } from "../../utils/validation";
 import { useState } from "react";
@@ -26,14 +22,8 @@ axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT_URL;
 
 function Register() {
   const theme = useTheme();
-  let authentication = useAuthentication();
-  let updateAuthentication = useAuthenticationUpdate();
-  const logoStyle = {
-    fill: theme.palette.text.primary,
-    height: parseInt(theme.spacing()) * 13,
-    padding: parseInt(theme.spacing()),
-    width: parseInt(theme.spacing()) * 13,
-  };
+  let { authentication, setAuthentication } = useAuthentication();
+  // let updateAuthentication = useAuthenticationUpdate();
   const registerStyle = {
     backgroundColor: theme.palette.background.paper,
     borderRadius: 3,
@@ -47,6 +37,7 @@ function Register() {
   async function register(event) {
     event.preventDefault();
 
+    // Form Validation section
     let validationError = registerValidation(formValues);
     if (!_.isEmpty(validationError)) {
       setFormValidationError(validationError);
@@ -58,6 +49,8 @@ function Register() {
       password: "",
       confirmPassword: "",
     });
+
+    // After form validation is performed we toggle submitted to true
     setSubmitted(true);
     let response = null;
     try {
@@ -70,67 +63,53 @@ function Register() {
         email: formValues.email,
         password: formValues.password,
       });
-      console.log(response.data);
       setError(null);
       setErrorAlertOpen(false);
     } catch (error) {
+      console.log(error);
       setError(error.response.data);
       setErrorAlertOpen(true);
     } finally {
       setSubmitted(false);
-      updateAuthentication(_.isEmpty(response) ? null : response.data);
+      // Update authentication state only if login is successful
+      if (!_.isEmpty(response))
+        setAuthentication((previous) => ({
+          ...previous,
+          isAuthenticated: true,
+          user: response.data,
+        }));
     }
   }
 
+  // All the form values
   let [formValues, setFormValues] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  // All the validation errors for each form value
   let [formValidationError, setFormValidationError] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  // Decides whether to show error alert box or not.
   let [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  // Error message from the API
   let [error, setError] = useState(null);
+  // Flag which indicates if the form was submitted or not
   let [submitted, setSubmitted] = useState(false);
 
+  // If user is authenticated redirect to home page.
   if (authentication.isAuthenticated) {
     return <Navigate to="/" />;
   }
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: {
-            xs: "column",
-            sm: "row",
-          },
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Logo style={logoStyle} />
-        <Typography
-          variant="logoLarge"
-          align="center"
-          component={"h2"}
-          sx={{
-            ml: {
-              xs: 0,
-              sm: 2.5,
-              md: 5,
-            },
-          }}
-        >
-          Anonymous Sender
-        </Typography>
-      </Box>
+      <Logo />
 
       {error && (
         <Collapse in={errorAlertOpen} sx={{ mt: 3, mx: [2, 15, 30, 45, 60] }}>
@@ -158,7 +137,10 @@ function Register() {
             type={"text"}
             value={formValues.name}
             onChange={(e) =>
-              setFormValues({ ...formValues, name: e.target.value })
+              setFormValues((previous) => ({
+                ...previous,
+                name: e.target.value,
+              }))
             }
             disabled={submitted}
             error={formValidationError.name ? true : false}
@@ -170,7 +152,10 @@ function Register() {
             type={"email"}
             value={formValues.email}
             onChange={(e) =>
-              setFormValues({ ...formValues, email: e.target.value })
+              setFormValues((previous) => ({
+                ...previous,
+                email: e.target.value,
+              }))
             }
             disabled={submitted}
             error={formValidationError.email ? true : false}
@@ -182,7 +167,10 @@ function Register() {
             type={"password"}
             value={formValues.password}
             onChange={(e) =>
-              setFormValues({ ...formValues, password: e.target.value })
+              setFormValues((previous) => ({
+                ...previous,
+                password: e.target.value,
+              }))
             }
             disabled={submitted}
             error={formValidationError.password ? true : false}
@@ -194,7 +182,10 @@ function Register() {
             type={"password"}
             value={formValues.confirmPassword}
             onChange={(e) =>
-              setFormValues({ ...formValues, confirmPassword: e.target.value })
+              setFormValues((previous) => ({
+                ...previous,
+                confirmPassword: e.target.value,
+              }))
             }
             disabled={submitted}
             error={formValidationError.confirmPassword ? true : false}

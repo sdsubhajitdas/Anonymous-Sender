@@ -4,7 +4,7 @@ import NotFound from "./pages/NotFound";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import Register from "./pages/Register/index";
 import Send from "./pages/Send";
-import { AuthenticationProvider } from "./context/AuthenticationContext";
+import { AuthenticationProvider } from "./context/AuthenticationProvider";
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 
