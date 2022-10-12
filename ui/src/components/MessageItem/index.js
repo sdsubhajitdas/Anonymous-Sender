@@ -14,10 +14,23 @@ import {
 } from "@mui/icons-material";
 import _ from "lodash";
 import { useState } from "react";
+import { axiosPrivate } from "../../api/axios";
 
-export default function MessageItem({ createdAt, sender, message }) {
+export default function MessageItem({
+  messageId,
+  createdAt,
+  sender,
+  message,
+  retrieveMessages,
+}) {
   const theme = useTheme();
   let [confirmDelete, setConfirmDelete] = useState(false);
+
+  async function deleteMessage() {
+    await axiosPrivate.delete(`/messages/${messageId}`);
+    setConfirmDelete(false);
+    await retrieveMessages();
+  }
 
   return (
     <Grid item xs={12} sm={12} md={12}>
@@ -55,7 +68,7 @@ export default function MessageItem({ createdAt, sender, message }) {
               </Typography>
               <IconButton
                 aria-label="Cancel delete"
-                marginLeft={2}
+                sx={{ marginLeft: 1 }}
                 color="secondary"
                 onClick={() => setConfirmDelete(false)}
               >
@@ -63,9 +76,8 @@ export default function MessageItem({ createdAt, sender, message }) {
               </IconButton>
               <IconButton
                 aria-label="Confirm delete"
-                marginLeft={2}
                 color="success"
-                onClick={() => setConfirmDelete(false)}
+                onClick={deleteMessage}
               >
                 <CheckIcon />
               </IconButton>
