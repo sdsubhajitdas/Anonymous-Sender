@@ -72,7 +72,10 @@ module.exports.handler = async (event, context) => {
     };
 
     let expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 1);
+    expiryDate.setDate(
+      expiryDate.getDate() +
+        parseInt(process.env.REFRESH_TOKEN_COOKIE_EXPIRE_DAYS)
+    );
     response = {
       headers: {
         "Set-Cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Expires=${expiryDate.toUTCString()}; SameSite=None`,
