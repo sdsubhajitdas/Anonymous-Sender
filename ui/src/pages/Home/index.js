@@ -1,9 +1,5 @@
-import MessageItem from "../../components/MessageItem/index";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import moment from "moment";
 import {
   Box,
-  Button,
   CircularProgress,
   Grid,
   IconButton,
@@ -13,10 +9,13 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import LogoutRoundedIcon from "@mui/icons-material/Logout";
 import { ContentCopy } from "@mui/icons-material";
-import useAuthentication from "../../hooks/useAuthentication";
 import { useEffect, useState } from "react";
+import Logout from "../../components/Logout";
+import MessageItem from "../../components/MessageItem/index";
+import moment from "moment";
+import useAuthentication from "../../hooks/useAuthentication";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 export default function App() {
   let theme = useTheme();
@@ -83,19 +82,6 @@ export default function App() {
     }
   }
 
-  async function logout() {
-    try {
-      axiosPrivate.get("/users/logout");
-      setAuthentication((previous) => ({
-        ...previous,
-        isAuthenticated: false,
-        user: null,
-      }));
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   let [messageItemsForSingleColumn, setMessageItemsForSingleColumn] = useState(
     []
   );
@@ -130,26 +116,7 @@ export default function App() {
         >
           Hello {authentication.user.name}
         </Typography>
-        {screenWidth < theme.breakpoints.values["md"] ? (
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ marginLeft: "auto", marginRight: 1 }}
-            onClick={logout}
-          >
-            Logout
-          </Button>
-        ) : (
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<LogoutRoundedIcon />}
-            sx={{ marginLeft: "auto", marginRight: 3 }}
-            onClick={logout}
-          >
-            Logout
-          </Button>
-        )}
+        <Logout screenWidth={screenWidth} />
       </Box>
 
       <Box sx={{ marginX: [1, 8, 12, 18, 30], marginTop: 3 }}>
