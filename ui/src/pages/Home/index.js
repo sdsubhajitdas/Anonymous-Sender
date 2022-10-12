@@ -19,13 +19,19 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 export default function App() {
   let theme = useTheme();
-  let { authentication, setAuthentication } = useAuthentication();
+  let { authentication } = useAuthentication();
   const axiosPrivate = useAxiosPrivate();
 
   async function retrieveMessages() {
     setMessagesLoading(true);
     try {
       const response = await axiosPrivate.get("/messages");
+
+      if (response.data.length <= 0) {
+        setNoMessages(true);
+        setMessagesLoading(false);
+        return;
+      }
 
       const generateSingleMessageItem = (itemData) => {
         return (
@@ -63,9 +69,10 @@ export default function App() {
 
       setMessageItemsForSingleColumn(updatedMessageItemsForSingleColumn);
       setMessageItemsForTwoColumns(updatedMessageItemsForTwoColumns);
-      setMessagesLoading(false);
     } catch (error) {
       console.error(error);
+    } finally {
+      setMessagesLoading(false);
     }
   }
 
@@ -92,6 +99,7 @@ export default function App() {
   let [screenWidth, setScreenWidth] = useState(window.innerWidth);
   let [copyState, setCopyState] = useState({ show: false, message: "" });
   let [messagesLoading, setMessagesLoading] = useState(true);
+  let [noMessages, setNoMessages] = useState(false);
 
   useEffect(() => {
     retrieveMessages();
@@ -162,34 +170,39 @@ export default function App() {
         </Box>
       )}
 
-      <Box
-        sx={{
-          marginX: [1, 8, 12, 18, 30],
-          marginY: 5,
-          display: messagesLoading ? "none" : "",
-        }}
-      >
-        {screenWidth < theme.breakpoints.values["md"] ? (
-          <Grid container spacing={2.5}>
-            {messageItemsForSingleColumn}
-          </Grid>
-        ) : (
-          <Grid
-            container
-            spacing={2.5}
-            direction="row"
-            justify="flex-start"
-            alignItems="flex-start"
-          >
-            <Grid container item spacing={2.5} sm={12} md={6}>
-              {messageItemsForTwoColumns.left}
+      {noMessages && !messagesLoading ? (
+        <Typography variant="h3" textAlign={"center"} marginTop={13}>
+          Sorry 😔, no messages yet !
+        </Typography>
+      ) : (
+        <Box
+          sx={{
+            marginX: [1, 8, 12, 18, 30],
+            marginY: 5,
+          }}
+        >
+          {screenWidth < theme.breakpoints.values["md"] ? (
+            <Grid container spacing={2.5}>
+              {messageItemsForSingleColumn}
             </Grid>
-            <Grid container item spacing={2.5} sm={12} md={6}>
-              {messageItemsForTwoColumns.right}
+          ) : (
+            <Grid
+              container
+              spacing={2.5}
+              direction="row"
+              justify="flex-start"
+              alignItems="flex-start"
+            >
+              <Grid container item spacing={2.5} sm={12} md={6}>
+                {messageItemsForTwoColumns.left}
+              </Grid>
+              <Grid container item spacing={2.5} sm={12} md={6}>
+                {messageItemsForTwoColumns.right}
+              </Grid>
             </Grid>
-          </Grid>
-        )}
-      </Box>
+          )}
+        </Box>
+      )}
 
       <Snackbar
         open={copyState.show}
@@ -197,7 +210,6 @@ export default function App() {
         onClose={() => setCopyState({ show: false, message: "" })}
         message={copyState.message}
       />
-      <Typography>{}</Typography>
     </>
   );
 }
