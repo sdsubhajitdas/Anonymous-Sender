@@ -30,7 +30,6 @@ export default function useAxiosPrivate() {
         if (error?.response?.status === 403 && !previousRequest?.sent) {
           previousRequest.sent = true;
           const newAccessToken = await refresh();
-          console.log("Updated Access Token: " + newAccessToken);
           previousRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(previousRequest);
         }
