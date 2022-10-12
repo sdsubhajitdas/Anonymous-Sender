@@ -24,6 +24,7 @@ export default function App() {
   const axiosPrivate = useAxiosPrivate();
 
   async function retrieveMessages() {
+    setMessagesLoading(true);
     try {
       const response = await axiosPrivate.get("/messages");
 
@@ -31,11 +32,13 @@ export default function App() {
         return (
           <MessageItem
             key={itemData._id}
+            messageId={itemData._id}
             createdAt={moment(itemData.createdAt).format(
               "h:mm A, Do MMMM YYYY"
             )}
             sender={itemData.sender}
             message={itemData.message}
+            retrieveMessages={retrieveMessages}
           />
         );
       };

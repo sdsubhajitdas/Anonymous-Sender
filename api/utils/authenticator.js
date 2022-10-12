@@ -23,11 +23,20 @@ function isAuthenticated(headers) {
     user = verifyAccessToken(accessToken);
     return { error, user };
   } catch (error) {
-    if (_.get(error, "name", "") === "JsonWebTokenError") {
+    const errorMessage = {
+      JsonWebTokenError: "Invalid authentication token",
+      TokenExpiredError: "Expired authentication token",
+    };
+
+    if (
+      ["JsonWebTokenError", "TokenExpiredError"].includes(
+        _.get(error, "name", "")
+      )
+    ) {
       error = {
         statusCode: 403,
         errorCode: "AuthenticationError",
-        body: JSON.stringify("Invalid authentication token"),
+        body: JSON.stringify(errorMessage[_.get(error, "name", "")]),
       };
       return { error, user };
     }

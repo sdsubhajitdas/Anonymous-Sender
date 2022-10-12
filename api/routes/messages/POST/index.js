@@ -56,7 +56,7 @@ module.exports.handler = async (event, context) => {
     let savedMessage = await message.save();
 
     response = {
-      statusCode: 200,
+      statusCode: 201,
       body: JSON.stringify(savedMessage),
     };
   } catch (error) {

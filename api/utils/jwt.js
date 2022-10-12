@@ -13,7 +13,7 @@ function getAccessToken(user) {
   user = filterUserData(user);
 
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15s",
+    expiresIn: `${process.env.ACCESS_TOKEN_EXPIRE_SECONDS}s`,
   });
 }
 
@@ -21,7 +21,7 @@ function getRefreshToken(user) {
   user = filterUserData(user);
 
   return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "10m",
+    expiresIn: `${process.env.REFRESH_TOKEN_EXPIRE_SECONDS}s`,
   });
 }
 
