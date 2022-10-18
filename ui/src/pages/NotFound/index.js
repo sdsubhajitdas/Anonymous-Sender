@@ -11,8 +11,6 @@ export default function NotFound() {
   let playerWidth = Math.floor(screenWidth / 16) * 16;
   let playerHeight = (playerWidth * 9) / 16;
 
-  console.log(screenWidth + ": " + playerWidth);
-
   useEffect(() => {
     window.addEventListener("resize", () => {
       setScreenWidth(window.innerWidth * divideFactor);

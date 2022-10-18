@@ -2,7 +2,7 @@ import axios from "../api/axios";
 import useAuthentication from "./useAuthentication";
 
 export default function useRefreshToken() {
-  const { authentication, setAuthentication } = useAuthentication();
+  const { setAuthentication } = useAuthentication();
 
   const refresh = async () => {
     const response = await axios.get("/users/refresh");
