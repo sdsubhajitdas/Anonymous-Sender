@@ -1,7 +1,6 @@
 "use strict";
 
 const mongoose = require("mongoose");
-const _ = require("lodash");
 require("dotenv").config();
 
 const Message = require("../../../models/Message");

@@ -1,14 +1,11 @@
 "use strict";
 
 const _ = require("lodash");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
 const User = require("../../../models/User");
 const logger = require("../../../utils/logger");
-const { loginValidation } = require("../../../utils/validation");
 const { startDatabaseConnection } = require("../../../utils/database");
 
 module.exports.handler = async (event, context) => {
