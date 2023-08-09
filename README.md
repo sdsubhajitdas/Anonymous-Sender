@@ -4,6 +4,10 @@
 
 This is a simple anonymous message sending application website. Not a direct clone but basic functionalities are implemented.
 
+Demo User Credentials:
+Email - demo@mail.com
+Password - 12345678
+
 ## Screenshots of the application
 #### Home page
 ![image](https://user-images.githubusercontent.com/20211573/197622346-ee821690-f35e-49c7-a2c2-e759e5e7f414.png)
