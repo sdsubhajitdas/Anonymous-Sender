@@ -4,9 +4,9 @@
 
 This is a simple anonymous message sending application website. Not a direct clone but basic functionalities are implemented.
 
-Demo User Credentials:
-Email - demo@mail.com
-Password - 12345678
+**Demo User Credentials:**<br>
+_Email_ - demo@mail.com<br>
+_Password_ - 12345678<br>
 
 ## Screenshots of the application
 #### Home page
